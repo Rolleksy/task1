@@ -1,8 +1,8 @@
 const { plus, minus, multiply, divide } = require('./calculate');
 
 // Example string numbers
-let x = "1234567890";
-let y = "100";
+let x = "1000000000000000000000 ";
+let y = "123";
 
 // Perform operations
 // Sum

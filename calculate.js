@@ -71,22 +71,53 @@ String.prototype.multiply = function(other) {
     return result.reverse().join('').replace(/^0+(?=\d)/, '');
 }
 
+// Fixed division of big numbers
 String.prototype.divide = function(other) {
-    let num1 = parseInt(this);
-    let num2 = parseInt(other);
+    let dividend = this.toString();
+    let divisor = other.toString();
 
-    if (num2 === 0) {
+    // Check if divisor is zero
+    if (divisor === "0") {
         throw new Error("Division by zero is not allowed.");
     }
 
-    let result = Math.floor(num1 / num2).toString();
+    // Convert strings to arrays of numbers
+    let dividendArr = dividend.split('').map(Number);
+    let divisorArr = divisor.split('').map(Number);
 
-    return result;
-}
+    let quotient = [];
+    let tempDividend = 0;
+    let index = 0;
+
+
+    while (index < dividendArr.length) {
+        // Get the next digit from the dividend and shift it to the left by one decimal place
+        tempDividend = tempDividend * 10 + dividendArr[index];
+        index++;
+
+        // Check if the dividend is less than the divisor and add a zero to the quotient
+        if (tempDividend < divisor) {
+            quotient.push(0);
+            continue;
+        }
+
+        // Perform division
+        let tempQuotient = Math.floor(tempDividend / divisor);
+        // Add the quotient to the result
+        quotient.push(tempQuotient);
+        // Calculate the new dividend
+        tempDividend = tempDividend - tempQuotient * divisor;
+    }
+
+    // (/^0+(?=\d)/, '') removes leading zeroes
+    quotient = quotient.join('').replace(/^0+(?=\d)/, '');
+
+    return quotient || "0";
+};
 
 module.exports = {
     plus: String.prototype.plus,
     minus: String.prototype.minus,
     multiply: String.prototype.multiply,
     divide: String.prototype.divide
-}
+};
